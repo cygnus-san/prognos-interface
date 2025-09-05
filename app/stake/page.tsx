@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useWallet } from '@/hooks/useWallet';
-import { PoolsAPI } from '@/lib/api';
-import { Pool, APIError } from '@/types';
+import { usePoolsQuery, useStakeMutation } from '@/hooks/usePoolsQuery';
+import { Pool } from '@/types';
+import toast from 'react-hot-toast';
 
 interface StakingCardProps {
   pool: Pool;
@@ -231,44 +232,29 @@ function StakingCard({ pool, onStake }: StakingCardProps) {
 }
 
 export default function StakePage() {
-  const [pools, setPools] = useState<Pool[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { isConnected } = useWallet();
-
-  useEffect(() => {
-    const fetchPools = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await PoolsAPI.getAllPools();
-        // Show all pools for staking
-        setPools(data);
-      } catch (err) {
-        const apiError = err as APIError;
-        setError(apiError.message || 'Failed to fetch pools');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPools();
-  }, []);
+  const { isConnected, walletAddress } = useWallet();
+  const { data: pools, isLoading: loading, error } = usePoolsQuery();
+  const stakeMutation = useStakeMutation();
 
   const handleStake = async (poolId: string, prediction: number, amount: number, outcome: 'yes' | 'no') => {
+    if (!walletAddress) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+
     try {
       // This would integrate with your staking API
-      console.log(`Staking ${amount} STX on ${outcome} with ${prediction}% confidence for pool ${poolId}`);
+      toast.success(`Staking ${amount} STX on ${outcome} with ${prediction}% confidence for pool ${poolId}`);
       
-      // For now, just show success message
-      // In real implementation, you'd call something like:
-      // await PoolsAPI.stake(poolId, outcome, amount, prediction);
-      
-      // Refresh pools after stake
-      const updatedPools = await PoolsAPI.getAllPools();
-      setPools(updatedPools);
+      // In real implementation, you'd call:
+      await stakeMutation.mutateAsync({
+        poolId,
+        walletAddress,
+        prediction: outcome,
+        amount,
+      });
     } catch (error) {
-      console.error('Stake failed:', error);
+      // Error handling is done in the mutation hook
       throw error;
     }
   };
@@ -314,7 +300,7 @@ export default function StakePage() {
       {error && (
         <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
           <p className="font-medium">Error loading staking markets</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error?.message || 'Failed to load staking markets'}</p>
           <button 
             onClick={() => window.location.reload()} 
             className="mt-2 text-sm underline hover:no-underline"
@@ -325,7 +311,7 @@ export default function StakePage() {
       )}
 
       {/* Staking Markets */}
-      {!loading && !error && (
+      {!loading && !error && pools && (
         <>
           {pools.length === 0 ? (
             <div className="text-center py-12">

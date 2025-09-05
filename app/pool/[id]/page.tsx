@@ -1,57 +1,32 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import VoteForm from '@/components/VoteForm';
 import StakeForm from '@/components/StakeForm';
 import ClaimButton from '@/components/ClaimButton';
 import { useWallet } from '@/hooks/useWallet';
-import { PoolsAPI } from '@/lib/api';
-import { Pool, Prediction, APIError } from '@/types';
+import { usePoolQuery } from '@/hooks/usePoolsQuery';
+import { Prediction } from '@/types';
 
 export default function PoolDetail() {
   const params = useParams();
   const poolId = params.id as string;
   const { walletAddress, isConnected, connectWallet } = useWallet();
   
-  const [pool, setPool] = useState<Pool | null>(null);
-  const [userPrediction, setUserPrediction] = useState<Prediction | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: pool, isLoading: loading, error, refetch } = usePoolQuery(poolId);
   const [activeTab, setActiveTab] = useState<'vote' | 'stake'>('vote');
 
-  const fetchPoolData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const poolData = await PoolsAPI.getPool(poolId);
-      setPool(poolData);
-
-      // Find user's prediction if wallet is connected
-      if (walletAddress) {
-        const userPred = poolData.predictions.find(
-          pred => pred.userWalletAddress === walletAddress
-        );
-        setUserPrediction(userPred || null);
-      }
-    } catch (err) {
-      const apiError = err as APIError;
-      setError(apiError.message || 'Failed to fetch pool details');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (poolId) {
-      fetchPoolData();
-    }
-  }, [poolId, walletAddress]);
+  // Find user's prediction if wallet is connected
+  const userPrediction: Prediction | null = 
+    walletAddress && pool
+      ? pool.predictions.find(pred => pred.userWalletAddress === walletAddress) || null
+      : null;
 
   const handleFormSubmission = () => {
     // Refresh pool data after vote or stake submission
-    fetchPoolData();
+    refetch();
   };
 
   if (loading) {
@@ -69,10 +44,10 @@ export default function PoolDetail() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg">
           <p className="font-medium">Error loading pool</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error.message || 'Failed to fetch pool details'}</p>
           <div className="mt-4 space-x-4">
             <button 
-              onClick={() => fetchPoolData()} 
+              onClick={() => refetch()} 
               className="text-sm underline hover:no-underline"
             >
               Try again

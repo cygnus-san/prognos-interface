@@ -7,22 +7,23 @@ import { Pool } from "@/types";
 interface VotingCardProps {
   pool: Pool;
   onVote: (poolId: string, voteType: "yes" | "no") => Promise<void>;
+  isVoting?: boolean;
 }
 
-export default function VotingCard({ pool, onVote }: VotingCardProps) {
-  const [voting, setVoting] = useState<"yes" | "no" | null>(null);
+export default function VotingCard({ pool, onVote, isVoting = false }: VotingCardProps) {
+  const [localVoting, setLocalVoting] = useState<"yes" | "no" | null>(null);
   const { isConnected } = useWallet();
 
   const handleVote = async (voteType: "yes" | "no") => {
     if (!isConnected) return;
 
-    setVoting(voteType);
+    setLocalVoting(voteType);
     try {
       await onVote(pool.id, voteType);
     } catch (error) {
       console.error("Vote failed:", error);
     } finally {
-      setVoting(null);
+      setLocalVoting(null);
     }
   };
 
@@ -56,30 +57,30 @@ export default function VotingCard({ pool, onVote }: VotingCardProps) {
       <div className="flex space-x-3">
         <button
           onClick={() => handleVote("yes")}
-          disabled={!isConnected || voting !== null}
+          disabled={!isConnected || localVoting !== null || isVoting}
           className={`flex-1 py-3 px-4 rounded-lg font-medium text-white transition-colors ${
             !isConnected
               ? "bg-gray-300 cursor-not-allowed"
-              : voting === "yes"
+              : localVoting === "yes" || isVoting
               ? "bg-green-400 cursor-wait"
               : "bg-green-600 hover:bg-green-700"
           }`}
         >
-          {voting === "yes" ? "Voting..." : "Yes"}
+          {(localVoting === "yes" || isVoting) ? "Voting..." : "Yes"}
         </button>
 
         <button
           onClick={() => handleVote("no")}
-          disabled={!isConnected || voting !== null}
+          disabled={!isConnected || localVoting !== null || isVoting}
           className={`flex-1 py-3 px-4 rounded-lg font-medium text-white transition-colors ${
             !isConnected
               ? "bg-gray-300 cursor-not-allowed"
-              : voting === "no"
+              : localVoting === "no" || isVoting
               ? "bg-red-400 cursor-wait"
               : "bg-red-600 hover:bg-red-700"
           }`}
         >
-          {voting === "no" ? "Voting..." : "No"}
+          {(localVoting === "no" || isVoting) ? "Voting..." : "No"}
         </button>
       </div>
 

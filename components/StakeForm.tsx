@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PoolsAPI } from '@/lib/api';
-import { APIError } from '@/types';
+import { useStakeMutation } from '@/hooks/usePoolsQuery';
 
 interface StakeFormProps {
   poolId: string;
@@ -13,8 +12,8 @@ interface StakeFormProps {
 export default function StakeForm({ poolId, walletAddress, onStakeSubmitted }: StakeFormProps) {
   const [selectedPrediction, setSelectedPrediction] = useState<'yes' | 'no' | null>(null);
   const [stakeAmount, setStakeAmount] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const stakeMutation = useStakeMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,19 +29,21 @@ export default function StakeForm({ poolId, walletAddress, onStakeSubmitted }: S
       return;
     }
 
-    setIsSubmitting(true);
     setError(null);
 
     try {
-      await PoolsAPI.stake(poolId, walletAddress, selectedPrediction, amount);
-      onStakeSubmitted?.();
+      await stakeMutation.mutateAsync({
+        poolId,
+        walletAddress,
+        prediction: selectedPrediction,
+        amount,
+      });
+      // Reset form on success
       setStakeAmount('');
       setSelectedPrediction(null);
-    } catch (err) {
-      const apiError = err as APIError;
-      setError(apiError.message || 'Failed to submit stake');
-    } finally {
-      setIsSubmitting(false);
+      onStakeSubmitted?.();
+    } catch {
+      setError('Failed to submit stake');
     }
   };
 
@@ -102,14 +103,14 @@ export default function StakeForm({ poolId, walletAddress, onStakeSubmitted }: S
 
       <button
         type="submit"
-        disabled={isSubmitting || !selectedPrediction || !stakeAmount}
+        disabled={stakeMutation.isPending || !selectedPrediction || !stakeAmount}
         className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
-          isSubmitting || !selectedPrediction || !stakeAmount
+          stakeMutation.isPending || !selectedPrediction || !stakeAmount
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-green-600 text-white hover:bg-green-700'
         }`}
       >
-        {isSubmitting ? 'Submitting...' : 'Submit Stake'}
+        {stakeMutation.isPending ? 'Submitting...' : 'Submit Stake'}
       </button>
     </form>
   );

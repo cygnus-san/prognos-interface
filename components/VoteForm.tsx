@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PoolsAPI } from '@/lib/api';
-import { APIError } from '@/types';
+import { useVoteMutation } from '@/hooks/usePoolsQuery';
 
 interface VoteFormProps {
   poolId: string;
@@ -12,8 +11,8 @@ interface VoteFormProps {
 
 export default function VoteForm({ poolId, walletAddress, onVoteSubmitted }: VoteFormProps) {
   const [selectedVote, setSelectedVote] = useState<'yes' | 'no' | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const voteMutation = useVoteMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,17 +22,18 @@ export default function VoteForm({ poolId, walletAddress, onVoteSubmitted }: Vot
       return;
     }
 
-    setIsSubmitting(true);
     setError(null);
 
     try {
-      await PoolsAPI.vote(poolId, walletAddress, selectedVote);
+      await voteMutation.mutateAsync({
+        poolId,
+        walletAddress,
+        vote: selectedVote,
+      });
+      setSelectedVote(null); // Reset form
       onVoteSubmitted?.();
-    } catch (err) {
-      const apiError = err as APIError;
-      setError(apiError.message || 'Failed to submit vote');
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      setError('Failed to submit vote');
     }
   };
 
@@ -77,14 +77,14 @@ export default function VoteForm({ poolId, walletAddress, onVoteSubmitted }: Vot
 
       <button
         type="submit"
-        disabled={isSubmitting || !selectedVote}
+        disabled={voteMutation.isPending || !selectedVote}
         className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
-          isSubmitting || !selectedVote
+          voteMutation.isPending || !selectedVote
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-blue-600 text-white hover:bg-blue-700'
         }`}
       >
-        {isSubmitting ? 'Submitting...' : 'Submit Vote (Free)'}
+        {voteMutation.isPending ? 'Submitting...' : 'Submit Vote (Free)'}
       </button>
     </form>
   );

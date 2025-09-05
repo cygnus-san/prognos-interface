@@ -1,42 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import VotingCard from "@/components/VotingCard";
 import { useWallet } from "@/hooks/useWallet";
-import { PoolsAPI } from "@/lib/api";
-import { Pool, APIError } from "@/types";
+import { usePoolsQuery, useVoteMutation } from "@/hooks/usePoolsQuery";
+import toast from "react-hot-toast";
 
 export default function Home() {
-  const [pools, setPools] = useState<Pool[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { isConnected } = useWallet();
-
-  useEffect(() => {
-    const fetchPools = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await PoolsAPI.getAllPools();
-        setPools(data);
-      } catch (err) {
-        const apiError = err as APIError;
-        setError(apiError.message || "Failed to fetch pools");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPools();
-  }, []);
+  const { isConnected, walletAddress } = useWallet();
+  const { data: pools, isLoading: loading, error } = usePoolsQuery();
+  const voteMutation = useVoteMutation();
 
   const handleVote = async (poolId: string, voteType: "yes" | "no") => {
+    if (!isConnected || !walletAddress) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
     try {
-      console.log(`Voting ${voteType} on pool ${poolId}`);
-      const updatedPools = await PoolsAPI.getAllPools();
-      setPools(updatedPools);
+      await voteMutation.mutateAsync({
+        poolId,
+        walletAddress,
+        vote: voteType,
+      });
     } catch (error) {
-      console.error("Vote failed:", error);
+      // Error handling is done in the mutation hook
       throw error;
     }
   };
@@ -59,15 +46,20 @@ export default function Home() {
       {error && (
         <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
           <p className="font-medium">Error loading pools</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error.message || "Failed to fetch pools"}</p>
         </div>
       )}
 
       {/* Simple Cards Grid */}
-      {!loading && !error && (
+      {!loading && !error && pools && (
         <div className="space-y-6">
           {pools.map((pool) => (
-            <VotingCard key={pool.id} pool={pool} onVote={handleVote} />
+            <VotingCard 
+              key={pool.id} 
+              pool={pool} 
+              onVote={handleVote}
+              isVoting={voteMutation.isPending}
+            />
           ))}
         </div>
       )}

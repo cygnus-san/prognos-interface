@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import { useWallet } from '@/hooks/useWallet';
-import { PoolsAPI } from '@/lib/api';
-import { Pool, Prediction, APIError } from '@/types';
+import { usePoolsQuery } from '@/hooks/usePoolsQuery';
+import { Pool, Prediction } from '@/types';
 
 interface UserPredictionWithPool extends Prediction {
   pool: Pool;
@@ -12,47 +12,27 @@ interface UserPredictionWithPool extends Prediction {
 
 export default function Profile() {
   const { walletAddress, isConnected, connectWallet } = useWallet();
-  const [userPredictions, setUserPredictions] = useState<UserPredictionWithPool[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data: pools, isLoading: loading, error } = usePoolsQuery();
 
-  useEffect(() => {
-    const fetchUserPredictions = async () => {
-      if (!walletAddress) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-        
-        // Get all pools and filter user predictions
-        const pools = await PoolsAPI.getAllPools();
-        const predictions: UserPredictionWithPool[] = [];
-        
-        pools.forEach(pool => {
-          const userPreds = pool.predictions.filter(
-            pred => pred.userWalletAddress === walletAddress
-          );
-          userPreds.forEach(pred => {
-            predictions.push({
-              ...pred,
-              pool
-            });
-          });
+  // Filter user predictions from all pools
+  const userPredictions = useMemo(() => {
+    if (!walletAddress || !pools) return [];
+    
+    const predictions: UserPredictionWithPool[] = [];
+    pools.forEach(pool => {
+      const userPreds = pool.predictions.filter(
+        pred => pred.userWalletAddress === walletAddress
+      );
+      userPreds.forEach(pred => {
+        predictions.push({
+          ...pred,
+          pool
         });
-
-        setUserPredictions(predictions);
-      } catch (err) {
-        const apiError = err as APIError;
-        setError(apiError.message || 'Failed to fetch your predictions');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (isConnected) {
-      fetchUserPredictions();
-    }
-  }, [walletAddress, isConnected]);
+      });
+    });
+    
+    return predictions;
+  }, [walletAddress, pools]);
 
   if (!isConnected) {
     return (
@@ -125,7 +105,7 @@ export default function Profile() {
       {error && (
         <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
           <p className="font-medium">Error loading predictions</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">{error.message || 'Failed to fetch your predictions'}</p>
         </div>
       )}
 

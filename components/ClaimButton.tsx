@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { PoolsAPI } from '@/lib/api';
-import { APIError, Prediction } from '@/types';
+import { useClaimRewardMutation } from '@/hooks/usePoolsQuery';
+import { Prediction } from '@/types';
 
 interface ClaimButtonProps {
   poolId: string;
@@ -12,24 +12,20 @@ interface ClaimButtonProps {
 }
 
 export default function ClaimButton({ poolId, walletAddress, prediction, onRewardClaimed }: ClaimButtonProps) {
-  const [isClaiming, setIsClaiming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const claimMutation = useClaimRewardMutation();
 
   const handleClaim = async () => {
-    setIsClaiming(true);
     setError(null);
-    setSuccess(null);
 
     try {
-      const result = await PoolsAPI.claimReward(poolId, walletAddress);
-      setSuccess(`Successfully claimed $${result.mockReward.toFixed(2)} reward!`);
+      await claimMutation.mutateAsync({
+        poolId,
+        walletAddress,
+      });
       onRewardClaimed?.();
-    } catch (err) {
-      const apiError = err as APIError;
-      setError(apiError.message || 'Failed to claim reward');
-    } finally {
-      setIsClaiming(false);
+    } catch {
+      setError('Failed to claim reward');
     }
   };
 
@@ -45,23 +41,17 @@ export default function ClaimButton({ poolId, walletAddress, prediction, onRewar
           {error}
         </div>
       )}
-      
-      {success && (
-        <div className="p-3 bg-green-100 border border-green-300 text-green-700 rounded-lg text-sm">
-          {success}
-        </div>
-      )}
 
       <button
         onClick={handleClaim}
-        disabled={isClaiming}
+        disabled={claimMutation.isPending}
         className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
-          isClaiming
+          claimMutation.isPending
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
             : 'bg-yellow-600 text-white hover:bg-yellow-700'
         }`}
       >
-        {isClaiming ? 'Claiming...' : 'Claim Reward (Mock)'}
+        {claimMutation.isPending ? 'Claiming...' : 'Claim Reward (Mock)'}
       </button>
       
       <p className="text-xs text-gray-500 text-center">
