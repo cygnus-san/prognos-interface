@@ -1,52 +1,44 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { connect, disconnect, isConnected } from "@stacks/connect";
-import { AppState } from "@/types";
+import { useState, useEffect, useCallback } from "react";
+import { connect, disconnect, isConnected, request } from "@stacks/connect";
 
 export function useWallet() {
   const [connected, setConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
-  const appDetails = {
-    name: "Prognos MVP",
-    icon: "/favicon.ico",
-  };
+  const checkConnection = useCallback(async () => {
+    const connectionStatus = isConnected();
+    if (connectionStatus !== connected) {
+      setConnected(connectionStatus);
+    }
 
-  useEffect(() => {
-    // Check initial connection status
-    setConnected(isConnected());
+    if (connectionStatus !== connected) {
+      setConnected(connectionStatus);
+    }
+
+    if (connectionStatus) {
+      const result = await request("stx_getAddresses");
+      const stacksAddress = result.addresses.find(
+        // @ts-ignore
+        (address) => address.purpose === "stacks"
+      )?.address;
+
+      if (!stacksAddress) {
+        throw new Error("No Stacks address found");
+      }
+      setWalletAddress(stacksAddress);
+    }
   }, []);
 
-  // Check for connection changes
   useEffect(() => {
-    const checkConnection = () => {
-      const connectionStatus = isConnected();
-      if (connectionStatus !== connected) {
-        setConnected(connectionStatus);
-      }
-    };
-
-    const intervalId = setInterval(checkConnection, 500);
-    return () => clearInterval(intervalId);
-  }, [connected]);
+    checkConnection();
+  }, [checkConnection]);
 
   const connectWallet = async () => {
     try {
-      connect();
-      // await connect({
-      //   appDetails: {
-      //     name: "Prognos MVP",
-      //     icon: "/favicon.ico",
-      //   },
-      //   onFinish: () => {
-      //     setConnected(true);
-      //     // Small delay to ensure connection is fully established
-      //     setTimeout(() => {
-      //       // Additional setup can go here if needed
-      //     }, 100);
-      //   },
-      // });
+      await connect();
+      await checkConnection();
     } catch (error) {
       console.error("Connection failed:", error);
     }
@@ -61,7 +53,7 @@ export function useWallet() {
   // Helper function to get wallet address when needed
   const getWalletAddress = async () => {
     if (!connected) return null;
-    return walletAddress || "connected";
+    return walletAddress;
   };
 
   return {

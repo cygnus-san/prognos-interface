@@ -79,6 +79,10 @@ export const api = {
     return apiRequest<Pool[]>('/pools');
   },
 
+  async getFeedPools(walletAddress: string): Promise<Pool[]> {
+    return apiRequest<Pool[]>(`/pools/feeds/${walletAddress}`);
+  },
+
   async getPool(id: string): Promise<Pool> {
     return apiRequest<Pool>(`/pools/${id}`);
   },

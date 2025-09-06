@@ -10,6 +10,8 @@ export const poolQueryKeys = {
   all: ['pools'] as const,
   lists: () => [...poolQueryKeys.all, 'list'] as const,
   list: (filters?: Record<string, unknown>) => [...poolQueryKeys.lists(), filters] as const,
+  feeds: () => [...poolQueryKeys.all, 'feed'] as const,
+  feed: (walletAddress: string) => [...poolQueryKeys.feeds(), walletAddress] as const,
   details: () => [...poolQueryKeys.all, 'detail'] as const,
   detail: (id: string) => [...poolQueryKeys.details(), id] as const,
 };
@@ -19,6 +21,15 @@ export function usePoolsQuery() {
   return useQuery({
     queryKey: poolQueryKeys.list(),
     queryFn: () => api.getAllPools(),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+  });
+}
+
+export function useFeedPoolsQuery(walletAddress: string | null) {
+  return useQuery({
+    queryKey: poolQueryKeys.feed(walletAddress || ''),
+    queryFn: () => api.getFeedPools(walletAddress!),
+    enabled: !!walletAddress,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
@@ -42,11 +53,13 @@ export function useVoteMutation() {
       walletAddress: string; 
       vote: 'yes' | 'no'; 
     }) => api.vote(poolId, walletAddress, vote),
-    onSuccess: (data, { poolId }) => {
+    onSuccess: (data, { poolId, walletAddress }) => {
       toast.success('Vote submitted successfully!');
       // Invalidate and refetch pool data
       queryClient.invalidateQueries({ queryKey: poolQueryKeys.detail(poolId) });
       queryClient.invalidateQueries({ queryKey: poolQueryKeys.list() });
+      // Invalidate feed data for this user since they just voted
+      queryClient.invalidateQueries({ queryKey: poolQueryKeys.feed(walletAddress) });
     },
     onError: (error) => {
       console.error('Vote failed:', error);

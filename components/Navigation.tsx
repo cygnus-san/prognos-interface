@@ -1,10 +1,12 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useWallet } from '@/hooks/useWallet';
+import Link from "next/link";
+import { useWallet } from "@/hooks/useWallet";
 
 export default function Navigation() {
-  const { walletAddress, isConnected, connectWallet, disconnectWallet } = useWallet();
+  const { walletAddress, isConnected, connectWallet, disconnectWallet } =
+    useWallet();
+  console.log(walletAddress);
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -17,21 +19,21 @@ export default function Navigation() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-8">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
             >
               Home
             </Link>
-            <Link 
-              href="/stake" 
+            <Link
+              href="/stake"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
             >
               Stake
             </Link>
             {isConnected && (
-              <Link 
-                href="/profile" 
+              <Link
+                href="/profile"
                 className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Profile
@@ -44,7 +46,8 @@ export default function Navigation() {
             {isConnected ? (
               <div className="flex items-center space-x-3">
                 <span className="text-sm text-gray-600 hidden sm:block">
-                  {walletAddress?.substring(0, 6)}...{walletAddress?.substring(walletAddress.length - 4)}
+                  {walletAddress?.substring(0, 6)}...
+                  {walletAddress?.substring(walletAddress.length - 4)}
                 </span>
                 <button
                   onClick={disconnectWallet}
@@ -66,21 +69,21 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         <div className="md:hidden pb-3">
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
           >
             Home
           </Link>
-          <Link 
-            href="/stake" 
+          <Link
+            href="/stake"
             className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
           >
             Stake
           </Link>
           {isConnected && (
-            <Link 
-              href="/profile" 
+            <Link
+              href="/profile"
               className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
             >
               Profile
