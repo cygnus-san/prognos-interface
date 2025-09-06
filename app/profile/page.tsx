@@ -65,21 +65,27 @@ export default function Profile() {
 
   if (!isConnected) {
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center py-12">
-          <div className="text-gray-400 mb-4">
-            <svg className="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center py-20 slide-up">
+            <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-6">
+              Profile
+            </h1>
+            <p className="text-xl text-slate-400 mb-10 max-w-md mx-auto">
+              Connect your wallet to view your predictions and rewards.
+            </p>
+            <button
+              onClick={connectWallet}
+              className="btn-primary text-lg px-8 py-4"
+            >
+              Connect Wallet
+            </button>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Profile</h1>
-          <p className="text-gray-600 mb-6">Connect your wallet to view your predictions and rewards.</p>
-          <button
-            onClick={connectWallet}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Connect Wallet
-          </button>
         </div>
       </div>
     );
@@ -94,258 +100,301 @@ export default function Profile() {
     .reduce((sum, pred) => sum + pred.stakeAmount * 1.5, 0); // Mock 1.5x reward
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile</h1>
-        <p className="text-gray-600">
-          Wallet: {walletAddress?.substring(0, 8)}...{walletAddress?.substring(walletAddress.length - 6)}
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Premium Header */}
+        <div className="mb-12 fade-in">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-4">
+            Profile
+          </h1>
+          <div className="flex items-center">
+            <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full mr-3"></div>
+            <p className="text-slate-400 text-lg font-mono">
+              {walletAddress?.substring(0, 12)}...{walletAddress?.substring(walletAddress.length - 8)}
+            </p>
+          </div>
+        </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-          <p className="text-2xl font-bold text-blue-600">{activePredictions.length}</p>
-          <p className="text-gray-600 text-sm">Active Campaigns</p>
+        {/* Premium Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.1s' }}>
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <p className="text-3xl font-bold text-blue-300 mb-2">{activePredictions.length}</p>
+            <p className="text-slate-400 text-sm font-medium">Active Campaigns</p>
+          </div>
+          
+          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.2s' }}>
+            <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-3xl font-bold text-green-300 mb-2">{resolvedPredictions.length}</p>
+            <p className="text-slate-400 text-sm font-medium">Resolved Campaigns</p>
+          </div>
+          
+          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.3s' }}>
+            <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+            </div>
+            <p className="text-3xl font-bold text-yellow-300 mb-2">${unclaimedRewards.toFixed(2)}</p>
+            <p className="text-slate-400 text-sm font-medium">Available to Claim</p>
+          </div>
+          
+          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.4s' }}>
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </div>
+            <p className="text-3xl font-bold text-purple-300 mb-2">${claimedRewards.toFixed(2)}</p>
+            <p className="text-slate-400 text-sm font-medium">Total Claimed</p>
+          </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-          <p className="text-2xl font-bold text-green-600">{resolvedPredictions.length}</p>
-          <p className="text-gray-600 text-sm">Resolved Campaigns</p>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-          <p className="text-2xl font-bold text-yellow-600">${unclaimedRewards.toFixed(2)}</p>
-          <p className="text-gray-600 text-sm">Available to Claim</p>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
-          <p className="text-2xl font-bold text-purple-600">${claimedRewards.toFixed(2)}</p>
-          <p className="text-gray-600 text-sm">Total Claimed</p>
-        </div>
-      </div>
 
-      {/* Loading State */}
-      {loading && (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      )}
+        {/* Loading State */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="loading-shimmer w-20 h-20 rounded-xl mb-6"></div>
+            <p className="text-slate-400 text-lg font-medium">Loading your predictions...</p>
+          </div>
+        )}
 
-      {/* Error State */}
-      {error && (
-        <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
-          <p className="font-medium">Error loading predictions</p>
-          <p className="text-sm">{error.message || 'Failed to fetch your predictions'}</p>
-        </div>
-      )}
+        {/* Error State */}
+        {error && (
+          <div className="glass-surface border border-red-400/30 px-6 py-5 rounded-xl mb-8 slide-up">
+            <div className="flex items-center mb-3">
+              <div className="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center mr-4">
+                <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-bold text-red-200">Error loading predictions</p>
+                <p className="text-red-300 text-sm mt-1">{error.message || 'Failed to fetch your predictions'}</p>
+              </div>
+            </div>
+          </div>
+        )}
 
-      {/* Tab Navigation */}
-      {!loading && !error && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="border-b border-gray-200">
-            <nav className="flex">
+        {/* Premium Tab Navigation */}
+        {!loading && !error && (
+          <div className="glass-card slide-up">
+            <div className="tab-nav">
               <button
                 onClick={() => setActiveTab('active')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === 'active'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={`tab-button ${activeTab === 'active' ? 'active' : ''}`}
               >
-                Active ({activePredictions.length})
+                <div className="flex items-center">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Active ({activePredictions.length})
+                </div>
               </button>
               <button
                 onClick={() => setActiveTab('resolved')}
-                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
-                  activeTab === 'resolved'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={`tab-button ${activeTab === 'resolved' ? 'active' : ''}`}
               >
-                Resolved ({resolvedPredictions.length})
+                <div className="flex items-center">
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Resolved ({resolvedPredictions.length})
+                </div>
               </button>
-            </nav>
-          </div>
+            </div>
 
-          {/* Tab Content */}
-          <div className="p-6">
-            {activeTab === 'active' && (
-              <div>
-                {activePredictions.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="text-gray-400 mb-4">
-                      <svg className="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No active campaigns</h3>
-                    <p className="text-gray-600 mb-4">Your active predictions will appear here.</p>
-                    <Link 
-                      href="/" 
-                      className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      Browse Markets
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 gap-6">
-                    {activePredictions.map((prediction) => (
-                      <div key={prediction.id} className="border border-gray-200 rounded-lg p-6">
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex-1">
-                            <Link 
-                              href={`/pool/${prediction.pool.id}`}
-                              className="text-lg font-semibold text-blue-600 hover:underline"
-                            >
-                              {prediction.pool.title}
-                            </Link>
-                            <p className="text-gray-600 mt-1 line-clamp-2">
-                              {prediction.pool.description}
-                            </p>
-                          </div>
-                          <span className="ml-4 px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                            Active
-                          </span>
-                        </div>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <p className="text-gray-500">Your Prediction</p>
-                            <p className={`font-medium ${
-                              prediction.predictionValue === 'yes' ? 'text-green-600' : 'text-red-600'
-                            }`}>
-                              {prediction.predictionValue.toUpperCase()}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Stake Amount</p>
-                            <p className="font-medium text-gray-900">
-                              {prediction.stakeAmount > 0 ? `$${prediction.stakeAmount.toFixed(2)}` : 'Vote Only'}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Pool Size</p>
-                            <p className="font-medium text-gray-900">
-                              ${prediction.pool.totalStake.toFixed(2)}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-gray-500">Ends</p>
-                            <p className="font-medium text-gray-900">
-                              {new Date(prediction.pool.deadline).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
+            {/* Tab Content */}
+            <div className="p-8">
+              {activeTab === 'active' && (
+                <div>
+                  {activePredictions.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-20 h-20 bg-gradient-to-r from-slate-600 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'resolved' && (
-              <div>
-                {resolvedPredictions.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="text-gray-400 mb-4">
-                      <svg className="mx-auto h-16 w-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                      </svg>
+                      <h3 className="text-2xl font-bold text-white mb-3">No active campaigns</h3>
+                      <p className="text-slate-400 mb-8">Your active predictions will appear here.</p>
+                      <Link href="/" className="btn-primary">
+                        Browse Markets
+                      </Link>
                     </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No resolved campaigns</h3>
-                    <p className="text-gray-600">Your resolved predictions will appear here.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 gap-6">
-                    {resolvedPredictions.map((prediction) => {
-                      const mockReward = prediction.stakeAmount * 1.5;
-                      const canClaim = prediction.stakeAmount > 0 && !prediction.claimed;
-                      
-                      return (
-                        <div key={prediction.id} className="border border-gray-200 rounded-lg p-6">
-                          <div className="flex justify-between items-start mb-4">
+                  ) : (
+                    <div className="space-y-6">
+                      {activePredictions.map((prediction, index) => (
+                        <div 
+                          key={prediction.id} 
+                          className="glass-surface border border-slate-600/30 rounded-xl p-6 slide-up"
+                          style={{ animationDelay: `${index * 0.1}s` }}
+                        >
+                          <div className="flex justify-between items-start mb-6">
                             <div className="flex-1">
                               <Link 
                                 href={`/pool/${prediction.pool.id}`}
-                                className="text-lg font-semibold text-blue-600 hover:underline"
+                                className="text-xl font-bold text-purple-300 hover:text-purple-200 transition-colors block mb-2"
                               >
                                 {prediction.pool.title}
                               </Link>
-                              <p className="text-gray-600 mt-1 line-clamp-2">
+                              <p className="text-slate-400 line-clamp-2 leading-relaxed">
                                 {prediction.pool.description}
                               </p>
                             </div>
-                            <span className="ml-4 px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
-                              Resolved
+                            <span className="badge-active ml-6">
+                              Active
                             </span>
                           </div>
                           
-                          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm mb-4">
-                            <div>
-                              <p className="text-gray-500">Your Prediction</p>
-                              <p className={`font-medium ${
-                                prediction.predictionValue === 'yes' ? 'text-green-600' : 'text-red-600'
+                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <p className="text-slate-500 text-sm mb-2">Your Prediction</p>
+                              <p className={`font-bold text-lg ${
+                                prediction.predictionValue === 'yes' ? 'text-green-400' : 'text-red-400'
                               }`}>
                                 {prediction.predictionValue.toUpperCase()}
                               </p>
                             </div>
-                            <div>
-                              <p className="text-gray-500">Stake Amount</p>
-                              <p className="font-medium text-gray-900">
-                                {prediction.stakeAmount > 0 ? `$${prediction.stakeAmount.toFixed(2)}` : 'Vote Only'}
+                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <p className="text-slate-500 text-sm mb-2">Stake Amount</p>
+                              <p className="font-bold text-lg text-blue-300">
+                                {prediction.stakeAmount > 0 ? `${prediction.stakeAmount.toFixed(2)} STX` : 'Vote Only'}
                               </p>
                             </div>
-                            <div>
-                              <p className="text-gray-500">Reward Amount</p>
-                              <p className="font-medium text-gray-900">
-                                ${mockReward.toFixed(2)}
+                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <p className="text-slate-500 text-sm mb-2">Pool Size</p>
+                              <p className="font-bold text-lg text-purple-300">
+                                ${prediction.pool.totalStake.toFixed(2)}
                               </p>
                             </div>
-                            <div>
-                              <p className="text-gray-500">Status</p>
-                              <p className={`font-medium ${
-                                prediction.claimed ? 'text-green-600' : canClaim ? 'text-yellow-600' : 'text-gray-600'
-                              }`}>
-                                {prediction.claimed ? 'Claimed' : canClaim ? 'Available' : 'No Reward'}
+                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <p className="text-slate-500 text-sm mb-2">Ends</p>
+                              <p className="font-bold text-lg text-amber-300">
+                                {new Date(prediction.pool.deadline).toLocaleDateString()}
                               </p>
                             </div>
-                            <div>
-                              {canClaim && (
-                                <button
-                                  onClick={() => handleClaim(prediction.pool.id)}
-                                  disabled={claimMutation.isPending}
-                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                                    claimMutation.isPending
-                                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                      : 'bg-green-600 text-white hover:bg-green-700'
-                                  }`}
-                                >
-                                  {claimMutation.isPending ? (
-                                    <div className="flex items-center">
-                                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1"></div>
-                                      Claiming...
-                                    </div>
-                                  ) : (
-                                    `Claim $${mockReward.toFixed(2)}`
-                                  )}
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                          
-                          <div className="text-xs text-gray-500">
-                            Ended: {new Date(prediction.pool.deadline).toLocaleDateString()} • 
-                            Predicted: {new Date(prediction.createdAt).toLocaleDateString()}
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {activeTab === 'resolved' && (
+                <div>
+                  {resolvedPredictions.length === 0 ? (
+                    <div className="text-center py-16">
+                      <div className="w-20 h-20 bg-gradient-to-r from-slate-600 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <svg className="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-2xl font-bold text-white mb-3">No resolved campaigns</h3>
+                      <p className="text-slate-400">Your resolved predictions will appear here.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {resolvedPredictions.map((prediction, index) => {
+                        const mockReward = prediction.stakeAmount * 1.5;
+                        const canClaim = prediction.stakeAmount > 0 && !prediction.claimed;
+                        
+                        return (
+                          <div 
+                            key={prediction.id} 
+                            className="glass-surface border border-slate-600/30 rounded-xl p-6 slide-up"
+                            style={{ animationDelay: `${index * 0.1}s` }}
+                          >
+                            <div className="flex justify-between items-start mb-6">
+                              <div className="flex-1">
+                                <Link 
+                                  href={`/pool/${prediction.pool.id}`}
+                                  className="text-xl font-bold text-purple-300 hover:text-purple-200 transition-colors block mb-2"
+                                >
+                                  {prediction.pool.title}
+                                </Link>
+                                <p className="text-slate-400 line-clamp-2 leading-relaxed">
+                                  {prediction.pool.description}
+                                </p>
+                              </div>
+                              <span className="badge-resolved ml-6">
+                                Resolved
+                              </span>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                                <p className="text-slate-500 text-sm mb-2">Your Prediction</p>
+                                <p className={`font-bold text-lg ${
+                                  prediction.predictionValue === 'yes' ? 'text-green-400' : 'text-red-400'
+                                }`}>
+                                  {prediction.predictionValue.toUpperCase()}
+                                </p>
+                              </div>
+                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                                <p className="text-slate-500 text-sm mb-2">Stake Amount</p>
+                                <p className="font-bold text-lg text-blue-300">
+                                  {prediction.stakeAmount > 0 ? `${prediction.stakeAmount.toFixed(2)} STX` : 'Vote Only'}
+                                </p>
+                              </div>
+                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                                <p className="text-slate-500 text-sm mb-2">Reward Amount</p>
+                                <p className="font-bold text-lg text-yellow-300">
+                                  ${mockReward.toFixed(2)}
+                                </p>
+                              </div>
+                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                                <p className="text-slate-500 text-sm mb-2">Status</p>
+                                <p className={`font-bold text-lg ${
+                                  prediction.claimed ? 'text-green-400' : canClaim ? 'text-yellow-400' : 'text-slate-400'
+                                }`}>
+                                  {prediction.claimed ? 'Claimed' : canClaim ? 'Available' : 'No Reward'}
+                                </p>
+                              </div>
+                              <div className="flex items-end">
+                                {canClaim && (
+                                  <button
+                                    onClick={() => handleClaim(prediction.pool.id)}
+                                    disabled={claimMutation.isPending}
+                                    className={`btn-primary w-full text-sm ${
+                                      claimMutation.isPending ? 'opacity-75 cursor-wait' : ''
+                                    }`}
+                                  >
+                                    {claimMutation.isPending ? (
+                                      <div className="flex items-center justify-center">
+                                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                                        Claiming...
+                                      </div>
+                                    ) : (
+                                      `Claim $${mockReward.toFixed(2)}`
+                                    )}
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between text-sm text-slate-500 pt-4 border-t border-slate-700/30">
+                              <span>Ended: {new Date(prediction.pool.deadline).toLocaleDateString()}</span>
+                              <span>Predicted: {new Date(prediction.createdAt).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

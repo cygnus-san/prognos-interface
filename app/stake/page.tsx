@@ -13,26 +13,76 @@ interface PoolCardProps {
 }
 
 function PoolCard({ pool, onClick }: PoolCardProps) {
+  const yesCount = pool.predictions?.filter(p => p.predictionValue === 'yes').length || 0;
+  const totalPredictions = pool._count.predictions;
+  const yesPercentage = totalPredictions > 0 ? (yesCount / totalPredictions) * 100 : 50;
+  
   return (
     <div
       onClick={onClick}
-      className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all cursor-pointer group"
+      className="glass-card cursor-pointer group overflow-hidden"
     >
       {/* Pool Image */}
-      <div className="h-48 relative">
+      <div className="h-52 relative overflow-hidden">
         {pool.image && (
-          <Image src={pool.image} alt={pool.title} fill objectFit="cover" />
+          <Image 
+            src={pool.image} 
+            alt={pool.title} 
+            fill 
+            className="object-cover transition-transform duration-500 group-hover:scale-110" 
+          />
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        
+        {/* Volume Badge */}
+        <div className="absolute top-4 left-4">
+          <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
+            <span className="text-white text-sm font-semibold">${pool.totalStake.toFixed(0)} STX</span>
+          </div>
+        </div>
+        
+        {/* Predictions Count */}
+        <div className="absolute top-4 right-4">
+          <div className="px-3 py-1.5 bg-purple-500/20 backdrop-blur-md rounded-full border border-purple-400/30">
+            <span className="text-purple-200 text-sm font-medium">{pool._count.predictions} votes</span>
+          </div>
+        </div>
       </div>
 
       {/* Pool Info */}
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-white mb-4 line-clamp-2 group-hover:text-purple-300 transition-colors leading-tight">
           {pool.title}
         </h3>
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <span>${pool.totalStake.toFixed(0)} volume</span>
-          <span>{pool._count.predictions} predictions</span>
+        
+        {/* Prediction Distribution */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-slate-400">Market Sentiment</span>
+            <span className="text-slate-300 font-medium">{yesPercentage.toFixed(0)}% YES</span>
+          </div>
+          
+          <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-green-500 to-emerald-400 transition-all duration-300"
+              style={{ width: `${yesPercentage}%` }}
+            ></div>
+          </div>
+          
+          <div className="flex justify-between text-xs">
+            <span className="text-green-400 font-medium">{yesPercentage.toFixed(0)}% YES</span>
+            <span className="text-red-400 font-medium">{(100 - yesPercentage).toFixed(0)}% NO</span>
+          </div>
+        </div>
+        
+        {/* Stake Button Hint */}
+        <div className="mt-5 pt-4 border-t border-slate-600/30">
+          <div className="flex items-center justify-center text-slate-400 group-hover:text-purple-300 transition-colors">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span className="text-sm font-medium">Click to stake</span>
+          </div>
         </div>
       </div>
     </div>
@@ -82,16 +132,16 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
   const yesPercentage = totalVotes > 0 ? (yesCount / totalVotes) * 100 : 50;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 fade-in">
+      <div className="glass-card max-w-lg w-full max-h-[90vh] overflow-y-auto slide-up">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">
+        <div className="flex items-center justify-between p-6 border-b border-slate-600/30">
+          <h2 className="text-2xl font-bold text-white">
             Stake on Prediction
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-slate-400 hover:text-white transition-colors p-1 rounded-full hover:bg-slate-700/50"
           >
             <svg
               className="w-6 h-6"
@@ -110,63 +160,65 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-8">
           {/* Pool Info */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-xl font-bold text-white mb-3 leading-tight">
               {pool.title}
             </h3>
-            <p className="text-sm text-gray-600 mb-4">{pool.description}</p>
+            <p className="text-slate-300 mb-6 leading-relaxed">{pool.description}</p>
 
             {/* Pool Details */}
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <div className="font-medium text-gray-900">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="glass-surface p-4 rounded-xl border border-slate-600/30">
+                <div className="text-2xl font-bold text-purple-300 mb-1">
                   ${pool.totalStake.toFixed(2)}
                 </div>
-                <div className="text-gray-500">Pool Size</div>
+                <div className="text-slate-400 text-sm">Pool Size</div>
               </div>
-              <div>
-                <div className="font-medium text-gray-900">
+              <div className="glass-surface p-4 rounded-xl border border-slate-600/30">
+                <div className="text-2xl font-bold text-blue-300 mb-1">
                   {new Date(pool.deadline).toLocaleDateString()}
                 </div>
-                <div className="text-gray-500">Pool Ends</div>
+                <div className="text-slate-400 text-sm">Pool Ends</div>
               </div>
             </div>
           </div>
 
           {/* Prediction Slider */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Prediction: {prediction}% YES ({yesPercentage.toFixed(0)}% of
-              people say yes)
+            <label className="block text-lg font-semibold text-white mb-4">
+              Your Prediction: {prediction}% YES
             </label>
-            <div className="space-y-2">
+            <div className="glass-surface p-4 rounded-xl border border-slate-600/30 space-y-4">
+              <div className="text-center text-slate-300 text-sm">
+                Current market: {yesPercentage.toFixed(0)}% YES • {(100 - yesPercentage).toFixed(0)}% NO
+              </div>
               <input
                 type="range"
                 min="0"
                 max="100"
                 value={prediction}
                 onChange={(e) => setPrediction(Number(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-3 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: `linear-gradient(to right, #ef4444 0%, #ef4444 ${
                     100 - prediction
                   }%, #10b981 ${100 - prediction}%, #10b981 100%)`,
                 }}
               />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>0% (NO)</span>
-                <span>50%</span>
-                <span>100% (YES)</span>
+              <div className="flex justify-between text-sm">
+                <span className="text-red-400 font-semibold">0% NO</span>
+                <span className="text-slate-400">50%</span>
+                <span className="text-green-400 font-semibold">100% YES</span>
               </div>
             </div>
           </div>
 
           {/* Stake Amount */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Prediction Size (STX tokens)
+            <label className="block text-lg font-semibold text-white mb-4">
+              Stake Amount
             </label>
             <div className="relative">
               <input
@@ -175,19 +227,19 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
                 step="0.1"
                 value={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="input-glass w-full text-lg font-medium pr-16"
                 placeholder="Enter amount"
               />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                <span className="text-gray-500 text-sm">STX</span>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+                <span className="text-slate-400 text-sm font-semibold">STX</span>
               </div>
             </div>
-            <div className="flex justify-between mt-2">
+            <div className="flex justify-between mt-4 gap-2">
               {[5, 10, 25, 50].map((preset) => (
                 <button
                   key={preset}
                   onClick={() => setAmount(preset)}
-                  className="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-gray-600"
+                  className="btn-secondary flex-1 text-sm py-2"
                 >
                   {preset} STX
                 </button>
@@ -199,18 +251,18 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
           <button
             onClick={handleStake}
             disabled={!isConnected || staking || amount <= 0}
-            className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+            className={`btn-primary w-full py-4 text-lg font-bold ${
               !isConnected || amount <= 0
-                ? "bg-gray-300 cursor-not-allowed"
+                ? "opacity-50 cursor-not-allowed"
                 : staking
-                ? "bg-blue-400 cursor-wait"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "opacity-75 cursor-wait"
+                : ""
             }`}
           >
             {staking ? (
               <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                Submitting...
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                Submitting Stake...
               </div>
             ) : (
               `Submit ${amount} STX Stake`
@@ -218,8 +270,8 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
           </button>
 
           {!isConnected && (
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-600 text-center">
+            <div className="glass-surface border border-amber-400/30 p-4 rounded-xl">
+              <p className="text-amber-200 text-center font-medium">
                 Connect your wallet to stake on this prediction
               </p>
             </div>
@@ -261,116 +313,132 @@ export default function StakePage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Staking Markets
-        </h1>
-        <p className="text-lg text-gray-600">
-          Select a prediction market to place your stake
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Premium Header */}
+        <div className="text-center mb-16 fade-in">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-6 leading-tight">
+            Staking Markets
+          </h1>
+          <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            Discover high-yield staking opportunities and put your STX to work in prediction markets
+          </p>
+        </div>
 
-      {/* Connection Status */}
-      {!isConnected && (
-        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-amber-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-amber-700">
-                Connect your wallet to start staking on predictions
-              </p>
+        {/* Connection Status */}
+        {!isConnected && (
+          <div className="mb-12 glass-surface border border-amber-400/30 p-6 rounded-xl slide-up">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-gradient-to-r from-amber-400 to-orange-400 rounded-xl flex items-center justify-center">
+                  <svg className="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fillRule="evenodd"
+                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div className="ml-6">
+                <p className="text-lg font-semibold text-amber-200 mb-1">
+                  Connect your wallet to start staking
+                </p>
+                <p className="text-amber-300/80">
+                  Unlock premium staking features and earn rewards on your predictions
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Loading State */}
-      {loading && (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      )}
+        {/* Loading State */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="loading-shimmer w-20 h-20 rounded-xl mb-6"></div>
+            <p className="text-slate-400 text-lg font-medium">Loading staking markets...</p>
+          </div>
+        )}
 
-      {/* Error State */}
-      {error && (
-        <div className="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded-lg mb-6">
-          <p className="font-medium">Error loading staking markets</p>
-          <p className="text-sm">
-            {error?.message || "Failed to load staking markets"}
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-2 text-sm underline hover:no-underline"
-          >
-            Try again
-          </button>
-        </div>
-      )}
-
-      {/* Pool Cards Grid */}
-      {!loading && !error && pools && (
-        <>
-          {pools.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-gray-400 mb-4">
-                <svg
-                  className="mx-auto h-16 w-16"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                  />
+        {/* Error State */}
+        {error && (
+          <div className="glass-surface border border-red-400/30 px-6 py-5 rounded-xl mb-12 slide-up">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center mr-4">
+                <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                No staking markets available
-              </h3>
-              <p className="text-gray-600">
-                Check back later for new staking opportunities.
-              </p>
+              <div>
+                <p className="font-bold text-red-200 text-lg">Error loading staking markets</p>
+                <p className="text-red-300 mt-1">{error?.message || "Failed to load staking markets"}</p>
+              </div>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {pools.map((pool) => (
-                <PoolCard
-                  key={pool.id}
-                  pool={pool}
-                  onClick={() => setSelectedPool(pool)}
-                />
-              ))}
-            </div>
-          )}
-        </>
-      )}
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-secondary text-sm"
+            >
+              Try again
+            </button>
+          </div>
+        )}
 
-      {/* Staking Modal */}
-      {selectedPool && (
-        <StakingModal
-          pool={selectedPool}
-          isOpen={!!selectedPool}
-          onClose={() => setSelectedPool(null)}
-          onStake={handleStake}
-        />
-      )}
+        {/* Pool Cards Grid */}
+        {!loading && !error && pools && (
+          <>
+            {pools.length === 0 ? (
+              <div className="text-center py-20 slide-up">
+                <div className="w-24 h-24 bg-gradient-to-r from-slate-600 to-slate-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
+                  <svg
+                    className="w-12 h-12 text-slate-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  No staking markets available
+                </h3>
+                <p className="text-slate-400 text-lg">
+                  Check back later for new staking opportunities.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {pools.map((pool, index) => (
+                  <div 
+                    key={pool.id}
+                    className="slide-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <PoolCard
+                      pool={pool}
+                      onClick={() => setSelectedPool(pool)}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Staking Modal */}
+        {selectedPool && (
+          <StakingModal
+            pool={selectedPool}
+            isOpen={!!selectedPool}
+            onClose={() => setSelectedPool(null)}
+            onStake={handleStake}
+          />
+        )}
+      </div>
     </div>
   );
 }

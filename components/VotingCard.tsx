@@ -28,66 +28,81 @@ export default function VotingCard({ pool, onVote, isVoting = false }: VotingCar
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <div className="glass-card slide-up">
       {/* Tag */}
-      <div className="mb-3">
-        <span className="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+      <div className="mb-4">
+        <span className="inline-block px-4 py-2 text-xs font-semibold bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 rounded-full border border-purple-500/30">
           {pool.tag || "General"}
         </span>
       </div>
 
       {/* Image */}
-      <div className="mb-4">
+      <div className="mb-6 relative overflow-hidden rounded-xl">
         <img
           src={pool.image || "/api/placeholder/400/200"}
           alt={pool.title}
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
       </div>
 
       {/* Name and Description */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+      <div className="mb-8">
+        <h3 className="text-xl font-bold text-white mb-3 leading-tight">
           {pool.title}
         </h3>
-        <p className="text-gray-600">{pool.description}</p>
+        <p className="text-slate-300 leading-relaxed line-clamp-2">{pool.description}</p>
       </div>
 
       {/* Yes/No Buttons */}
-      <div className="flex space-x-3">
+      <div className="flex space-x-4">
         <button
           onClick={() => handleVote("yes")}
           disabled={!isConnected || localVoting !== null || isVoting}
-          className={`flex-1 py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+          className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 ${
             !isConnected
-              ? "bg-gray-300 cursor-not-allowed"
+              ? "bg-gray-600/30 text-gray-400 cursor-not-allowed border border-gray-600/20"
               : localVoting === "yes" || isVoting
-              ? "bg-green-400 cursor-wait"
-              : "bg-green-600 hover:bg-green-700"
+              ? "bg-green-500/40 text-green-200 cursor-wait border border-green-400/30 shadow-lg shadow-green-500/20"
+              : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-400 hover:to-emerald-400 hover:shadow-xl hover:shadow-green-500/30 hover:scale-105 border border-green-400/20"
           }`}
         >
-          {(localVoting === "yes" || isVoting) ? "Voting..." : "Yes"}
+          {(localVoting === "yes" || isVoting) ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Voting...
+            </div>
+          ) : (
+            "Yes"
+          )}
         </button>
 
         <button
           onClick={() => handleVote("no")}
           disabled={!isConnected || localVoting !== null || isVoting}
-          className={`flex-1 py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+          className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 ${
             !isConnected
-              ? "bg-gray-300 cursor-not-allowed"
+              ? "bg-gray-600/30 text-gray-400 cursor-not-allowed border border-gray-600/20"
               : localVoting === "no" || isVoting
-              ? "bg-red-400 cursor-wait"
-              : "bg-red-600 hover:bg-red-700"
+              ? "bg-red-500/40 text-red-200 cursor-wait border border-red-400/30 shadow-lg shadow-red-500/20"
+              : "bg-gradient-to-r from-red-500 to-rose-500 text-white hover:from-red-400 hover:to-rose-400 hover:shadow-xl hover:shadow-red-500/30 hover:scale-105 border border-red-400/20"
           }`}
         >
-          {(localVoting === "no" || isVoting) ? "Voting..." : "No"}
+          {(localVoting === "no" || isVoting) ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Voting...
+            </div>
+          ) : (
+            "No"
+          )}
         </button>
       </div>
 
       {!isConnected && (
-        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-600 text-center">
-            Connect your wallet to vote
+        <div className="mt-6 p-4 glass-surface rounded-xl border border-amber-400/20">
+          <p className="text-sm text-amber-200 text-center font-medium">
+            Connect your wallet to vote on this prediction
           </p>
         </div>
       )}
