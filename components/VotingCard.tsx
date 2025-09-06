@@ -10,7 +10,11 @@ interface VotingCardProps {
   isVoting?: boolean;
 }
 
-export default function VotingCard({ pool, onVote, isVoting = false }: VotingCardProps) {
+export default function VotingCard({
+  pool,
+  onVote,
+  isVoting = false,
+}: VotingCardProps) {
   const [localVoting, setLocalVoting] = useState<"yes" | "no" | null>(null);
   const { isConnected } = useWallet();
 
@@ -28,7 +32,7 @@ export default function VotingCard({ pool, onVote, isVoting = false }: VotingCar
   };
 
   return (
-    <div className="glass-card p-6 slide-up">
+    <div className="glass-card p-4 slide-up h-full flex flex-col ">
       {/* Tag */}
       <div className="mb-4">
         <span className="inline-block px-4 py-2 text-xs font-semibold bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-300 rounded-full border border-blue-500/30">
@@ -47,15 +51,17 @@ export default function VotingCard({ pool, onVote, isVoting = false }: VotingCar
       </div>
 
       {/* Name and Description */}
-      <div className="mb-8">
+      <div className="mb-8 grow">
         <h3 className="text-xl font-bold text-white mb-3 leading-tight">
           {pool.title}
         </h3>
-        <p className="text-slate-300 leading-relaxed line-clamp-3">{pool.description}</p>
+        <p className="text-slate-300 leading-relaxed line-clamp-3">
+          {pool.description}
+        </p>
       </div>
 
       {/* Yes/No Buttons */}
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 ">
         <button
           onClick={() => handleVote("yes")}
           disabled={!isConnected || localVoting !== null || isVoting}
@@ -64,10 +70,10 @@ export default function VotingCard({ pool, onVote, isVoting = false }: VotingCar
               ? "bg-gray-600/30 text-gray-400 cursor-not-allowed border border-gray-600/20"
               : localVoting === "yes" || isVoting
               ? "bg-green-500/40 text-green-200 cursor-wait border border-green-400/30 shadow-lg shadow-green-500/20"
-              : "bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:from-green-400 hover:to-emerald-400 hover:shadow-xl hover:shadow-green-500/30 hover:scale-105 border border-green-400/20"
+              : "border-2 border-green-500 text-green-400 bg-transparent hover:bg-green-500/10 hover:border-green-400 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/20 hover:scale-105"
           }`}
         >
-          {(localVoting === "yes" || isVoting) ? (
+          {localVoting === "yes" || isVoting ? (
             <div className="flex items-center justify-center">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
               Voting...
@@ -85,10 +91,10 @@ export default function VotingCard({ pool, onVote, isVoting = false }: VotingCar
               ? "bg-gray-600/30 text-gray-400 cursor-not-allowed border border-gray-600/20"
               : localVoting === "no" || isVoting
               ? "bg-red-500/40 text-red-200 cursor-wait border border-red-400/30 shadow-lg shadow-red-500/20"
-              : "bg-gradient-to-r from-red-500 to-rose-500 text-white hover:from-red-400 hover:to-rose-400 hover:shadow-xl hover:shadow-red-500/30 hover:scale-105 border border-red-400/20"
+              : "border-2 border-red-500 text-red-400 bg-transparent hover:bg-red-500/10 hover:border-red-400 hover:text-red-300 hover:shadow-lg hover:shadow-red-500/20 hover:scale-105"
           }`}
         >
-          {(localVoting === "no" || isVoting) ? (
+          {localVoting === "no" || isVoting ? (
             <div className="flex items-center justify-center">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
               Voting...
