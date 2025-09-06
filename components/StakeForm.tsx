@@ -48,70 +48,79 @@ export default function StakeForm({ poolId, walletAddress, onStakeSubmitted }: S
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Your Prediction
-        </label>
-        <div className="flex space-x-4">
-          <button
-            type="button"
-            onClick={() => setSelectedPrediction('yes')}
-            className={`flex-1 py-3 px-4 rounded-lg border-2 transition-colors ${
-              selectedPrediction === 'yes'
-                ? 'border-green-500 bg-green-50 text-green-700'
-                : 'border-gray-300 hover:border-green-300'
-            }`}
-          >
-            Yes
-          </button>
-          <button
-            type="button"
-            onClick={() => setSelectedPrediction('no')}
-            className={`flex-1 py-3 px-4 rounded-lg border-2 transition-colors ${
-              selectedPrediction === 'no'
-                ? 'border-red-500 bg-red-50 text-red-700'
-                : 'border-gray-300 hover:border-red-300'
-            }`}
-          >
-            No
-          </button>
+    <div className="glass-card p-6 slide-up">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-semibold text-white mb-4">
+            Your Prediction
+          </label>
+          <div className="flex space-x-4">
+            <button
+              type="button"
+              onClick={() => setSelectedPrediction('yes')}
+              className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 ${
+                selectedPrediction === 'yes'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white border border-green-400/30 shadow-lg shadow-green-500/30'
+                  : 'glass-surface text-slate-300 border border-slate-600/30 hover:bg-green-500/20 hover:border-green-500/50 hover:text-green-300'
+              }`}
+            >
+              Yes
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedPrediction('no')}
+              className={`flex-1 py-4 px-6 rounded-xl font-semibold transition-all duration-300 ${
+                selectedPrediction === 'no'
+                  ? 'bg-gradient-to-r from-red-500 to-rose-500 text-white border border-red-400/30 shadow-lg shadow-red-500/30'
+                  : 'glass-surface text-slate-300 border border-slate-600/30 hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-300'
+              }`}
+            >
+              No
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div>
-        <label htmlFor="stakeAmount" className="block text-sm font-medium text-gray-700 mb-2">
-          Stake Amount ($)
-        </label>
-        <input
-          type="number"
-          id="stakeAmount"
-          value={stakeAmount}
-          onChange={(e) => setStakeAmount(e.target.value)}
-          step="0.01"
-          min="0.01"
-          placeholder="Enter amount to stake"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </div>
-
-      {error && (
-        <div className="p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm">
-          {error}
+        <div>
+          <label htmlFor="stakeAmount" className="block text-sm font-semibold text-white mb-4">
+            Stake Amount ($)
+          </label>
+          <input
+            type="number"
+            id="stakeAmount"
+            value={stakeAmount}
+            onChange={(e) => setStakeAmount(e.target.value)}
+            step="0.01"
+            min="0.01"
+            placeholder="Enter amount to stake"
+            className="input-glass w-full"
+          />
         </div>
-      )}
 
-      <button
-        type="submit"
-        disabled={stakeMutation.isPending || !selectedPrediction || !stakeAmount}
-        className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
-          stakeMutation.isPending || !selectedPrediction || !stakeAmount
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-green-600 text-white hover:bg-green-700'
-        }`}
-      >
-        {stakeMutation.isPending ? 'Submitting...' : 'Submit Stake'}
-      </button>
-    </form>
+        {error && (
+          <div className="p-4 bg-red-500/20 border border-red-400/30 text-red-300 rounded-xl text-sm font-medium">
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={stakeMutation.isPending || !selectedPrediction || !stakeAmount}
+          className={`btn-primary w-full py-4 ${
+            stakeMutation.isPending || !selectedPrediction || !stakeAmount
+              ? 'opacity-50 cursor-not-allowed'
+              : ''
+          }`}
+        >
+          {stakeMutation.isPending ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+              Submitting...
+            </div>
+          ) : (
+            'Submit Stake'
+          )}
+        </button>
+      </form>
+    </div>
   );
 }

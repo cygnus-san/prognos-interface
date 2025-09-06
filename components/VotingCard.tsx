@@ -28,10 +28,10 @@ export default function VotingCard({ pool, onVote, isVoting = false }: VotingCar
   };
 
   return (
-    <div className="glass-card slide-up">
+    <div className="glass-card p-6 slide-up">
       {/* Tag */}
       <div className="mb-4">
-        <span className="inline-block px-4 py-2 text-xs font-semibold bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-300 rounded-full border border-purple-500/30">
+        <span className="inline-block px-4 py-2 text-xs font-semibold bg-gradient-to-r from-blue-500/20 to-blue-600/20 text-blue-300 rounded-full border border-blue-500/30">
           {pool.tag || "General"}
         </span>
       </div>
@@ -51,7 +51,7 @@ export default function VotingCard({ pool, onVote, isVoting = false }: VotingCar
         <h3 className="text-xl font-bold text-white mb-3 leading-tight">
           {pool.title}
         </h3>
-        <p className="text-slate-300 leading-relaxed line-clamp-2">{pool.description}</p>
+        <p className="text-slate-300 leading-relaxed line-clamp-3">{pool.description}</p>
       </div>
 
       {/* Yes/No Buttons */}

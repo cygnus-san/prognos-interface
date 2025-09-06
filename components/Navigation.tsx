@@ -17,17 +17,17 @@ export default function Navigation() {
   ];
 
   return (
-    <nav className="glass-surface border-b border-slate-600/30 sticky top-0 z-40 backdrop-blur-xl">
+    <nav className="glass-surface border-b border-slate-600/30 sticky top-0 z-40 backdrop-blur-xl bg-slate-900/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold text-white">
               Polymarket
             </span>
           </Link>
@@ -43,7 +43,7 @@ export default function Navigation() {
                   href={item.href}
                   className={`flex items-center px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-200 border border-purple-400/30 shadow-lg shadow-purple-500/20'
+                      ? 'bg-blue-500/20 text-white border border-blue-400/30 shadow-lg shadow-blue-500/20'
                       : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                   }`}
                 >
@@ -112,7 +112,7 @@ export default function Navigation() {
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 ${
                       isActive
-                        ? 'bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-purple-200 border border-purple-400/30'
+                        ? 'bg-blue-500/20 text-white border border-blue-400/30'
                         : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
                     }`}
                   >

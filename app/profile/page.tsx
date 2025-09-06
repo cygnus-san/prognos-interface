@@ -65,15 +65,15 @@ export default function Profile() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+      <div className="min-h-screen">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center py-20 slide-up">
-            <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-8">
+            <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-8">
               <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-6">
+            <h1 className="text-4xl font-bold text-white mb-6">
               Profile
             </h1>
             <p className="text-xl text-slate-400 mb-10 max-w-md mx-auto">
@@ -100,11 +100,11 @@ export default function Profile() {
     .reduce((sum, pred) => sum + pred.stakeAmount * 1.5, 0); // Mock 1.5x reward
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Premium Header */}
+        {/* Header */}
         <div className="mb-12 fade-in">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl font-bold text-white mb-4">
             Profile
           </h1>
           <div className="flex items-center">
@@ -117,7 +117,7 @@ export default function Profile() {
 
         {/* Premium Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.1s' }}>
+          <div className="text-center slide-up p-6" style={{ animationDelay: '0.1s' }}>
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -127,7 +127,7 @@ export default function Profile() {
             <p className="text-slate-400 text-sm font-medium">Active Campaigns</p>
           </div>
           
-          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.2s' }}>
+          <div className="text-center slide-up p-6" style={{ animationDelay: '0.2s' }}>
             <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -137,7 +137,7 @@ export default function Profile() {
             <p className="text-slate-400 text-sm font-medium">Resolved Campaigns</p>
           </div>
           
-          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.3s' }}>
+          <div className="text-center slide-up p-6" style={{ animationDelay: '0.3s' }}>
             <div className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
@@ -147,13 +147,13 @@ export default function Profile() {
             <p className="text-slate-400 text-sm font-medium">Available to Claim</p>
           </div>
           
-          <div className="glass-card text-center slide-up" style={{ animationDelay: '0.4s' }}>
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="text-center slide-up p-6" style={{ animationDelay: '0.4s' }}>
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
             </div>
-            <p className="text-3xl font-bold text-purple-300 mb-2">${claimedRewards.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-blue-300 mb-2">${claimedRewards.toFixed(2)}</p>
             <p className="text-slate-400 text-sm font-medium">Total Claimed</p>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default function Profile() {
 
         {/* Error State */}
         {error && (
-          <div className="glass-surface border border-red-400/30 px-6 py-5 rounded-xl mb-8 slide-up">
+          <div className="px-6 py-5 rounded-xl mb-8 slide-up">
             <div className="flex items-center mb-3">
               <div className="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center mr-4">
                 <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +185,7 @@ export default function Profile() {
 
         {/* Premium Tab Navigation */}
         {!loading && !error && (
-          <div className="glass-card slide-up">
+          <div className="slide-up p-6">
             <div className="tab-nav">
               <button
                 onClick={() => setActiveTab('active')}
@@ -233,14 +233,14 @@ export default function Profile() {
                       {activePredictions.map((prediction, index) => (
                         <div 
                           key={prediction.id} 
-                          className="glass-surface border border-slate-600/30 rounded-xl p-6 slide-up"
+                          className="rounded-xl p-6 slide-up"
                           style={{ animationDelay: `${index * 0.1}s` }}
                         >
                           <div className="flex justify-between items-start mb-6">
                             <div className="flex-1">
                               <Link 
                                 href={`/pool/${prediction.pool.id}`}
-                                className="text-xl font-bold text-purple-300 hover:text-purple-200 transition-colors block mb-2"
+                                className="text-xl font-bold text-blue-300 hover:text-blue-200 transition-colors block mb-2"
                               >
                                 {prediction.pool.title}
                               </Link>
@@ -254,7 +254,7 @@ export default function Profile() {
                           </div>
                           
                           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                            <div className="p-4 rounded-lg">
                               <p className="text-slate-500 text-sm mb-2">Your Prediction</p>
                               <p className={`font-bold text-lg ${
                                 prediction.predictionValue === 'yes' ? 'text-green-400' : 'text-red-400'
@@ -262,19 +262,19 @@ export default function Profile() {
                                 {prediction.predictionValue.toUpperCase()}
                               </p>
                             </div>
-                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                            <div className="p-4 rounded-lg">
                               <p className="text-slate-500 text-sm mb-2">Stake Amount</p>
                               <p className="font-bold text-lg text-blue-300">
                                 {prediction.stakeAmount > 0 ? `${prediction.stakeAmount.toFixed(2)} STX` : 'Vote Only'}
                               </p>
                             </div>
-                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                            <div className="p-4 rounded-lg">
                               <p className="text-slate-500 text-sm mb-2">Pool Size</p>
-                              <p className="font-bold text-lg text-purple-300">
+                              <p className="font-bold text-lg text-blue-300">
                                 ${prediction.pool.totalStake.toFixed(2)}
                               </p>
                             </div>
-                            <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                            <div className="p-4 rounded-lg">
                               <p className="text-slate-500 text-sm mb-2">Ends</p>
                               <p className="font-bold text-lg text-amber-300">
                                 {new Date(prediction.pool.deadline).toLocaleDateString()}
@@ -309,14 +309,14 @@ export default function Profile() {
                         return (
                           <div 
                             key={prediction.id} 
-                            className="glass-surface border border-slate-600/30 rounded-xl p-6 slide-up"
+                            className="rounded-xl p-6 slide-up"
                             style={{ animationDelay: `${index * 0.1}s` }}
                           >
                             <div className="flex justify-between items-start mb-6">
                               <div className="flex-1">
                                 <Link 
                                   href={`/pool/${prediction.pool.id}`}
-                                  className="text-xl font-bold text-purple-300 hover:text-purple-200 transition-colors block mb-2"
+                                  className="text-xl font-bold text-blue-300 hover:text-blue-200 transition-colors block mb-2"
                                 >
                                   {prediction.pool.title}
                                 </Link>
@@ -330,7 +330,7 @@ export default function Profile() {
                             </div>
                             
                             <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <div className="p-4 rounded-lg">
                                 <p className="text-slate-500 text-sm mb-2">Your Prediction</p>
                                 <p className={`font-bold text-lg ${
                                   prediction.predictionValue === 'yes' ? 'text-green-400' : 'text-red-400'
@@ -338,19 +338,19 @@ export default function Profile() {
                                   {prediction.predictionValue.toUpperCase()}
                                 </p>
                               </div>
-                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <div className="p-4 rounded-lg">
                                 <p className="text-slate-500 text-sm mb-2">Stake Amount</p>
                                 <p className="font-bold text-lg text-blue-300">
                                   {prediction.stakeAmount > 0 ? `${prediction.stakeAmount.toFixed(2)} STX` : 'Vote Only'}
                                 </p>
                               </div>
-                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <div className="p-4 rounded-lg">
                                 <p className="text-slate-500 text-sm mb-2">Reward Amount</p>
                                 <p className="font-bold text-lg text-yellow-300">
                                   ${mockReward.toFixed(2)}
                                 </p>
                               </div>
-                              <div className="glass-surface p-4 rounded-lg border border-slate-700/30">
+                              <div className="p-4 rounded-lg">
                                 <p className="text-slate-500 text-sm mb-2">Status</p>
                                 <p className={`font-bold text-lg ${
                                   prediction.claimed ? 'text-green-400' : canClaim ? 'text-yellow-400' : 'text-slate-400'

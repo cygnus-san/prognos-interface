@@ -1,32 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  /* Premium Dark Theme Variables */
-  --bg-primary: #0F0F23;
-  --bg-secondary: #1A1B3E;
-  --bg-tertiary: #2D1B69;
+  /* Polymarket Design System - Exact Colors */
+  /* Background Colors */
+  --bg-primary: #1A1D21;
+  --bg-sidebar: #111315;
+  --bg-card: #1F2227;
   --bg-surface: rgba(255, 255, 255, 0.03);
   --bg-surface-hover: rgba(255, 255, 255, 0.06);
   --bg-glass: rgba(255, 255, 255, 0.05);
   
   /* Gradient Backgrounds */
-  --bg-gradient-primary: linear-gradient(135deg, #0F0F23 0%, #1A1B3E 50%, #2D1B69 100%);
-  --bg-gradient-card: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  --bg-gradient-primary: linear-gradient(135deg, #1A1D21 0%, #111315 50%, #1F2227 100%);
+  --bg-gradient-card: linear-gradient(135deg, rgba(31,34,39,0.9) 0%, rgba(26,29,33,0.95) 100%);
   --bg-gradient-purple: linear-gradient(135deg, #8B5CF6 0%, #A855F7 50%, #C084FC 100%);
   --bg-gradient-blue: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #93C5FD 100%);
   
-  /* Text Colors */
-  --text-primary: #F8FAFC;
-  --text-secondary: #CBD5E1;
-  --text-muted: #64748B;
-  --text-accent: #C084FC;
+  /* Text Colors - Exact from Design System */
+  --text-primary: #FFFFFF;
+  --text-secondary: #8B8E93;
+  --text-muted: #6C7076;
+  --text-accent: #8B5CF6;
   
-  /* Accent Colors */
+  /* Accent Colors - Exact from Design System */
   --color-purple: #8B5CF6;
-  --color-purple-light: #C084FC;
+  --color-purple-light: #A855F7;
   --color-blue: #3B82F6;
   --color-blue-light: #60A5FA;
-  --color-green: #10B981;
+  --color-green: #22C55E;
   --color-red: #EF4444;
   --color-yellow: #F59E0B;
   
@@ -35,21 +36,21 @@
   --border-secondary: rgba(255, 255, 255, 0.05);
   --border-accent: rgba(139, 92, 246, 0.3);
   
-  /* Shadow Colors */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-purple: 0 8px 32px rgba(139, 92, 246, 0.3);
-  --shadow-blue: 0 8px 32px rgba(59, 130, 246, 0.3);
+  /* Shadow Colors - Subtle for neumorphic feel */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-purple: 0 4px 24px rgba(139, 92, 246, 0.2);
+  --shadow-blue: 0 4px 24px rgba(59, 130, 246, 0.2);
   
   /* Glass Effect */
   --glass-backdrop: blur(16px);
-  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(31, 34, 39, 0.8);
   --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 body {
-  background: var(--bg-gradient-primary);
+  background: var(--bg-primary);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100vh;
@@ -66,30 +67,30 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-purple);
+  background: var(--color-blue);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-purple-light);
+  background: var(--color-blue-light);
 }
 
-/* Premium Glassmorphism Components */
+/* Polymarket Design System Components */
 .glass-card {
-  background: var(--glass-bg);
+  background: var(--bg-card);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
-  border: 1px solid var(--glass-border);
+  border: 1px solid var(--border-primary);
   border-radius: 16px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  background: var(--bg-surface-hover);
+  background: var(--bg-card);
   border-color: var(--border-accent);
-  box-shadow: var(--shadow-purple);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .glass-surface {
@@ -102,7 +103,7 @@ body {
 
 /* Premium Buttons */
 .btn-primary {
-  background: var(--bg-gradient-purple);
+  background: var(--color-blue);
   color: white;
   border: none;
   border-radius: 12px;
@@ -111,12 +112,13 @@ body {
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: var(--shadow-purple);
+  box-shadow: var(--shadow-blue);
 }
 
 .btn-primary:hover {
+  background: var(--color-blue-light);
   transform: translateY(-1px);
-  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
 }
 
 .btn-primary:active {
@@ -156,8 +158,8 @@ body {
 
 .input-glass:focus {
   outline: none;
-  border-color: var(--color-purple);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   background: var(--bg-surface-hover);
 }
 
@@ -290,9 +292,9 @@ body {
 }
 
 .tab-button.active {
-  background: var(--bg-gradient-purple);
+  background: var(--color-blue);
   color: white;
-  box-shadow: var(--shadow-purple);
+  box-shadow: var(--shadow-blue);
 }
 
 .tab-button:not(.active) {
