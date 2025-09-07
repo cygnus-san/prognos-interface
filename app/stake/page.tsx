@@ -141,7 +141,7 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
         memo: `Stake ${amount} STX on: ${pool.title}`,
       });
 
-      setTransactionStatus("Transaction confirmed! Submitting to API...");
+      setTransactionStatus("Transaction confirmed! Submitting stake...");
       
       await onStake(pool.id, prediction.toString(), amount, txId);
 
