@@ -69,7 +69,7 @@ export default function Home() {
               Connect your wallet to view personalized feeds
             </p>
             <p className="text-sm text-slate-400">
-              Your feed will show pools you haven't voted on yet
+              Your feed will show pools you haven&apos;t voted on yet
             </p>
           </div>
         )}
@@ -130,10 +130,10 @@ export default function Home() {
               </svg>
             </div>
             <p className="font-bold text-green-200 text-xl mb-2">
-              🎉 You're all caught up!
+              🎉 You&apos;re all caught up!
             </p>
             <p className="text-green-300">
-              You've voted on all available pools. Check back later for new
+              You&apos;ve voted on all available pools. Check back later for new
               ones.
             </p>
           </div>

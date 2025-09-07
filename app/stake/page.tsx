@@ -112,7 +112,8 @@ interface StakingModalProps {
   onStake: (
     poolId: string,
     prediction: string,
-    amount: number
+    amount: number,
+    transactionId?: string
   ) => Promise<void>;
 }
 
@@ -120,7 +121,8 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
   const [prediction, setPrediction] = useState<number>(50);
   const [amount, setAmount] = useState<number>(10);
   const [staking, setStaking] = useState(false);
-  const { isConnected } = useWallet();
+  const [transactionStatus, setTransactionStatus] = useState<string>("");
+  const { isConnected, balance, createStakeTransaction } = useWallet();
 
   if (!isOpen) return null;
 
@@ -128,14 +130,45 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
     if (!isConnected || staking) return;
 
     setStaking(true);
+    setTransactionStatus("Creating transaction...");
+
     try {
-      await onStake(pool.id, "yes", amount);
-      onClose();
+      setTransactionStatus("Please sign the transaction in your wallet...");
+      
+      const txId = await createStakeTransaction({
+        amount,
+        poolId: pool.id,
+        memo: `Stake ${amount} STX on: ${pool.title}`,
+      });
+
+      setTransactionStatus("Transaction confirmed! Submitting to API...");
+      
+      await onStake(pool.id, prediction.toString(), amount, txId);
+
+      setTransactionStatus("Stake completed successfully! 🎉");
+      toast.success("Stake completed successfully!");
+
+      setTimeout(() => {
+        onClose();
+        resetStakingState();
+      }, 2000);
     } catch (error) {
       console.error("Stake failed:", error);
-    } finally {
-      setStaking(false);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      setTransactionStatus(`Error: ${errorMessage}`);
+      toast.error(`Stake failed: ${errorMessage}`);
+      
+      // Reset after showing error for a bit
+      setTimeout(() => {
+        setTransactionStatus("");
+        setStaking(false);
+      }, 3000);
     }
+  };
+
+  const resetStakingState = () => {
+    setStaking(false);
+    setTransactionStatus("");
   };
 
   // Calculate yes/no percentages from predictions
@@ -269,9 +302,16 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
           {/* Submit Button */}
           <button
             onClick={handleStake}
-            disabled={!isConnected || staking || amount <= 0}
+            disabled={
+              !isConnected ||
+              staking ||
+              amount <= 0 ||
+              (balance !== null && balance < amount)
+            }
             className={`btn-primary w-full py-4 text-lg font-bold ${
-              !isConnected || amount <= 0
+              !isConnected ||
+              amount <= 0 ||
+              (balance !== null && balance < amount)
                 ? "opacity-50 cursor-not-allowed"
                 : staking
                 ? "opacity-75 cursor-wait"
@@ -281,12 +321,35 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
             {staking ? (
               <div className="flex items-center justify-center">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                Submitting Stake...
+                {transactionStatus || "Processing..."}
               </div>
+            ) : balance !== null && balance < amount ? (
+              "Insufficient STX Balance"
             ) : (
-              `Submit ${amount} STX Stake`
+              `Stake ${amount} STX`
             )}
           </button>
+
+          {/* Transaction Status Display */}
+          {transactionStatus && !staking && (
+            <div className={`glass-surface border p-4 rounded-xl ${
+              transactionStatus.includes("Error") 
+                ? "border-red-400/30" 
+                : transactionStatus.includes("successfully")
+                ? "border-green-400/30"
+                : "border-blue-400/30"
+            }`}>
+              <p className={`text-center font-medium ${
+                transactionStatus.includes("Error") 
+                  ? "text-red-200" 
+                  : transactionStatus.includes("successfully")
+                  ? "text-green-200"
+                  : "text-blue-200"
+              }`}>
+                {transactionStatus}
+              </p>
+            </div>
+          )}
 
           {!isConnected && (
             <div className="glass-surface border border-amber-400/30 p-4 rounded-xl">
@@ -310,7 +373,8 @@ export default function StakePage() {
   const handleStake = async (
     poolId: string,
     prediction: string,
-    amount: number
+    amount: number,
+    transactionId?: string
   ) => {
     if (!walletAddress) {
       toast.error("Please connect your wallet first");
@@ -323,8 +387,8 @@ export default function StakePage() {
         walletAddress,
         prediction,
         amount,
+        transactionId,
       });
-      toast.success(`Successfully staked ${amount} STX!`);
     } catch (error) {
       // Error handling is done in the mutation hook
       throw error;

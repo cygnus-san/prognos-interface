@@ -94,13 +94,14 @@ export const api = {
     });
   },
 
-  async stake(poolId: string, walletAddress: string, prediction: string, amount: number): Promise<StakeResponse> {
+  async stake(poolId: string, walletAddress: string, prediction: string, amount: number, transactionId?: string): Promise<StakeResponse> {
     return apiRequest<StakeResponse>(`/pools/${poolId}/stake`, {
       method: 'POST',
       body: JSON.stringify({
         walletAddress,
         predictionValue: prediction,
         stakeAmount: amount,
+        transactionId,
       }),
     });
   },

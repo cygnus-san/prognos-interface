@@ -76,15 +76,17 @@ export function useStakeMutation() {
       poolId, 
       walletAddress, 
       prediction, 
-      amount 
+      amount,
+      transactionId
     }: { 
       poolId: string; 
       walletAddress: string; 
       prediction: string; 
-      amount: number; 
-    }) => api.stake(poolId, walletAddress, prediction, amount),
+      amount: number;
+      transactionId?: string;
+    }) => api.stake(poolId, walletAddress, prediction, amount, transactionId),
     onSuccess: (data, { poolId }) => {
-      toast.success('Stake submitted successfully!');
+      toast.success('Stake verified and recorded successfully!');
       // Invalidate and refetch pool data
       queryClient.invalidateQueries({ queryKey: poolQueryKeys.detail(poolId) });
       queryClient.invalidateQueries({ queryKey: poolQueryKeys.list() });

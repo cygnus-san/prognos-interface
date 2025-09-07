@@ -1,0 +1,12 @@
+{
+  "name": "Stacks Polymarket Web",
+  "start_url": "/",
+  "description": "A decentralized prediction market on Stacks",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}
