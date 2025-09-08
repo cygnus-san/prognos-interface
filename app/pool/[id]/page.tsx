@@ -147,7 +147,7 @@ export default function PoolDetail() {
             <div>
               <p className="text-sm text-slate-400 mb-1">Total Stake</p>
               <p className="text-lg font-semibold text-green-400">
-                ${pool.totalStake.toFixed(2)}
+                {pool.totalStake.toFixed(2)} STX
               </p>
             </div>
             <div>
@@ -230,7 +230,7 @@ export default function PoolDetail() {
               <p className="text-blue-200">
                 Stake amount:{" "}
                 <strong className="text-white">
-                  ${userPrediction.stakeAmount.toFixed(2)}
+                  {userPrediction.stakeAmount.toFixed(2)} STX
                 </strong>
               </p>
             )}

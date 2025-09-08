@@ -55,7 +55,7 @@ export default function ClaimButton({ poolId, walletAddress, prediction, onRewar
       </button>
       
       <p className="text-xs text-gray-500 text-center">
-        Estimated reward: ${(prediction.stakeAmount * 1.5).toFixed(2)}
+        Estimated reward: {(prediction.stakeAmount * 1.5).toFixed(2)} STX
       </p>
     </div>
   );

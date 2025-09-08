@@ -107,7 +107,7 @@ export function useClaimRewardMutation() {
       walletAddress: string; 
     }) => api.claimReward(poolId, walletAddress),
     onSuccess: (data, { poolId }) => {
-      toast.success(`Reward claimed successfully! Amount: $${data.mockReward.toFixed(2)}`);
+      toast.success(`Reward claimed successfully! Amount: ${data.mockReward.toFixed(2)} STX`);
       // Invalidate and refetch pool data
       queryClient.invalidateQueries({ queryKey: poolQueryKeys.detail(poolId) });
       queryClient.invalidateQueries({ queryKey: poolQueryKeys.list() });

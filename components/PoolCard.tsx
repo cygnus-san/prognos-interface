@@ -50,7 +50,7 @@ export default function PoolCard({ pool }: PoolCardProps) {
         <div className="flex justify-between items-center pt-2">
           <div>
             <p className="text-sm text-slate-400">Total Stake</p>
-            <p className="text-lg font-bold text-green-400">${pool.totalStake.toFixed(2)}</p>
+            <p className="text-lg font-bold text-green-400">{pool.totalStake.toFixed(2)} STX</p>
           </div>
           
           <div className="text-right">

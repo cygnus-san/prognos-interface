@@ -143,7 +143,7 @@ export default function Profile() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
               </svg>
             </div>
-            <p className="text-3xl font-bold text-yellow-300 mb-2">${unclaimedRewards.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-yellow-300 mb-2">{unclaimedRewards.toFixed(2)} STX</p>
             <p className="text-slate-400 text-sm font-medium">Available to Claim</p>
           </div>
           
@@ -153,7 +153,7 @@ export default function Profile() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
               </svg>
             </div>
-            <p className="text-3xl font-bold text-blue-300 mb-2">${claimedRewards.toFixed(2)}</p>
+            <p className="text-3xl font-bold text-blue-300 mb-2">{claimedRewards.toFixed(2)} STX</p>
             <p className="text-slate-400 text-sm font-medium">Total Claimed</p>
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function Profile() {
                             <div className="p-4 rounded-lg">
                               <p className="text-slate-500 text-sm mb-2">Pool Size</p>
                               <p className="font-bold text-lg text-blue-300">
-                                ${prediction.pool.totalStake.toFixed(2)}
+                                {prediction.pool.totalStake.toFixed(2)} STX
                               </p>
                             </div>
                             <div className="p-4 rounded-lg">
@@ -347,7 +347,7 @@ export default function Profile() {
                               <div className="p-4 rounded-lg">
                                 <p className="text-slate-500 text-sm mb-2">Reward Amount</p>
                                 <p className="font-bold text-lg text-yellow-300">
-                                  ${mockReward.toFixed(2)}
+                                  {mockReward.toFixed(2)} STX
                                 </p>
                               </div>
                               <div className="p-4 rounded-lg">
@@ -373,7 +373,7 @@ export default function Profile() {
                                         Claiming...
                                       </div>
                                     ) : (
-                                      `Claim $${mockReward.toFixed(2)}`
+                                      `Claim ${mockReward.toFixed(2)} STX`
                                     )}
                                   </button>
                                 )}
