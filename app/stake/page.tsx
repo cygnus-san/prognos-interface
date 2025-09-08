@@ -40,7 +40,7 @@ function PoolCard({ pool, onClick }: PoolCardProps) {
         <div className="absolute top-4 left-4">
           <div className="px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
             <span className="text-white text-sm font-semibold">
-              ${pool.totalStake.toFixed(0)} STX
+              {pool.totalStake.toFixed(0)} STX
             </span>
           </div>
         </div>
@@ -134,7 +134,7 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
 
     try {
       setTransactionStatus("Please sign the transaction in your wallet...");
-      
+
       const txId = await createStakeTransaction({
         amount,
         poolId: pool.id,
@@ -142,7 +142,7 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
       });
 
       setTransactionStatus("Transaction confirmed! Submitting stake...");
-      
+
       await onStake(pool.id, prediction.toString(), amount, txId);
 
       setTransactionStatus("Stake completed successfully! 🎉");
@@ -154,10 +154,11 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
       }, 2000);
     } catch (error) {
       console.error("Stake failed:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error occurred";
       setTransactionStatus(`Error: ${errorMessage}`);
       toast.error(`Stake failed: ${errorMessage}`);
-      
+
       // Reset after showing error for a bit
       setTimeout(() => {
         setTransactionStatus("");
@@ -221,7 +222,7 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
             <div className="grid grid-cols-2 gap-6">
               <div className="glass-surface p-4 rounded-xl border border-slate-600/30">
                 <div className="text-2xl font-bold text-blue-300 mb-1">
-                  ${pool.totalStake.toFixed(2)}
+                  {pool.totalStake.toFixed(2)} STX
                 </div>
                 <div className="text-slate-400 text-sm">Pool Size</div>
               </div>
@@ -240,27 +241,18 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
               Your Prediction: {prediction}% YES
             </label>
             <div className="glass-surface p-4 rounded-xl border border-slate-600/30 space-y-4">
-              <div className="text-center text-slate-300 text-sm">
-                Current market: {yesPercentage.toFixed(0)}% YES •{" "}
-                {(100 - yesPercentage).toFixed(0)}% NO
-              </div>
               <input
                 type="range"
                 min="0"
                 max="100"
                 value={prediction}
                 onChange={(e) => setPrediction(Number(e.target.value))}
-                className="w-full h-3 bg-slate-700 rounded-lg appearance-none cursor-pointer slider"
-                style={{
-                  background: `linear-gradient(to right, #ef4444 0%, #ef4444 ${
-                    100 - prediction
-                  }%, #10b981 ${100 - prediction}%, #10b981 100%)`,
-                }}
+                className="w-full h-3 bg-slate-700 rounded-lg appearance-none cursor-pointer"
               />
               <div className="flex justify-between text-sm">
-                <span className="text-red-400 font-semibold">0% NO</span>
+                <span className="text-slate-400 font-semibold">0% NO</span>
                 <span className="text-slate-400">50%</span>
-                <span className="text-green-400 font-semibold">100% YES</span>
+                <span className="text-slate-400 font-semibold">100% YES</span>
               </div>
             </div>
           </div>
@@ -332,20 +324,24 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
 
           {/* Transaction Status Display */}
           {transactionStatus && !staking && (
-            <div className={`glass-surface border p-4 rounded-xl ${
-              transactionStatus.includes("Error") 
-                ? "border-red-400/30" 
-                : transactionStatus.includes("successfully")
-                ? "border-green-400/30"
-                : "border-blue-400/30"
-            }`}>
-              <p className={`text-center font-medium ${
-                transactionStatus.includes("Error") 
-                  ? "text-red-200" 
+            <div
+              className={`glass-surface border p-4 rounded-xl ${
+                transactionStatus.includes("Error")
+                  ? "border-red-400/30"
                   : transactionStatus.includes("successfully")
-                  ? "text-green-200"
-                  : "text-blue-200"
-              }`}>
+                  ? "border-green-400/30"
+                  : "border-blue-400/30"
+              }`}
+            >
+              <p
+                className={`text-center font-medium ${
+                  transactionStatus.includes("Error")
+                    ? "text-red-200"
+                    : transactionStatus.includes("successfully")
+                    ? "text-green-200"
+                    : "text-blue-200"
+                }`}
+              >
                 {transactionStatus}
               </p>
             </div>
@@ -367,6 +363,8 @@ function StakingModal({ pool, isOpen, onClose, onStake }: StakingModalProps) {
 export default function StakePage() {
   const { isConnected, walletAddress } = useWallet();
   const { data: pools, isLoading: loading, error } = usePoolsQuery();
+
+  console.log("Pools:", pools);
   const stakeMutation = useStakeMutation();
   const [selectedPool, setSelectedPool] = useState<Pool | null>(null);
 
